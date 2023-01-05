@@ -1,97 +1,16 @@
 [
   {
-    "account": "27de1f87599fd1f8ae5bd1101511d546",
-    "type": 0,
-    "details": {
-      "githubId": "mzargham",
-      "discordId": "250086586450968576",
-      "discordName": "mZ#3472",
-      "twitterId": "mzargham"
-    }
+    "discord_id": "250086586450968576",
+    "address": "27de1f87599fd1f8ae5bd1101511d546",
+    "history": [],
+    "is_slow": "False",
+    "is_key_role": "False"
   },
   {
-    "account": "562945a0318e392740f25e9630f10ea9",
-    "type": 0,
-    "details": {
-      "githubId": "matttyb80",
-      "discordId": "619213633255374858",
-      "discordName": "B.#2574"
-    }
-  },
-  {
-    "account": "123123fakeaddress123123",
-    "type": 0,
-    "details": {
-      "discordId": 123123,
-      "discordName": "Nima#1765",
-      "githubId": "nimadebi"
-    }
-  },
-  {
-    "account": "993123fakeaddress123199",
-    "type": 0,
-    "details": {
-      "discordId": 123124,
-      "discordName": "Nima#1765",
-      "githubId": "nimadebi"
-    }
-  },
-  {
-    "account": "None",
-    "type": 0,
-    "details": {
-      "discordId": "<member 'id' of 'BaseUser' objects>",
-      "discordName": "Nima#1765"
-    }
-  },
-  {
-    "account": "None",
-    "type": 0,
-    "details": {
-      "discordId": "<member 'id' of 'BaseUser' objects>",
-      "discordName": "Nima#1765"
-    }
-  },
-  {
-    "account": "0000000001",
-    "type": 0,
-    "details": {
-      "discordId": 196701369313394692,
-      "discordName": "Nima#1765",
-      "githubId": "nimadebi",
-      "twitterId": "twitterid"
-    }
-  },
-  {
-    "account": "None",
-    "type": 0,
-    "details": {
-      "discordId": 812061601862647818,
-      "discordName": "Beta#5339"
-    }
-  },
-  {
-    "account": "None",
-    "type": 0,
-    "details": {
-      "discordId": 812061601862647818,
-      "discordName": "Beta#5339"
-    }
-  },
-  {
-    "account": "None",
-    "type": 0,
-    "details": {
-      "discordId": 812061601862647818,
-      "discordName": "Beta#5339"
-    }
-  },
-  {
-    "account": "None",
-    "type": 0,
-    "details": {
-      "discordId": 812061601862647818,
-      "discordName": "Beta#5339"
-    }
+    "discord_id": "619213633255374858",
+    "address": "562945a0318e392740f25e9630f10ea9",
+    "history": [],
+    "is_slow": "False",
+    "is_key_role": "False"
   }
 ]
