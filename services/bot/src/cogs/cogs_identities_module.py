@@ -20,22 +20,21 @@ from src.util.emoji import Emoji
 class Identities(commands.Cog):
     def __init__(self, client):
         self.client = client
-
-    # @app_commands.command(name="account", description="update your primary wallet address")
-    # async def modal(self, interaction: Interaction):
-    #     # Show thinking message:
-    #     # await interaction.response.defer()
+    
+    @app_commands.command(name="account", description="update your primary wallet address")
+    async def modal(self, interaction: Interaction):
+        # Show thinking message:
+        # await interaction.response.defer()
         
-    #     # check is address is known
-    #     dbid = Contributor.get_active_contributor_by_discord_id(interaction.user.id)
+        # check is address is known
+        dbid = Contributor.get_active_contributor_by_discord_id(interaction.user.id)
+        if not dbid or len(dbid) == 0:
+            message = f"{Emoji.print(Emoji, emoji_name='warning')} Only whitelisted contributors can manage their warrior identity."
+            await interaction.response.send_message(message, ephemeral=True)
+            return
         
-    #     if not dbid:
-    #         message = f"{Emoji.print(Emoji, emoji_name='warning')} Only whitelisted contributors can add an account. Ask a key role to add your account."
-    #         await interaction.followup.send(message, ephemeral=True)
-    #         return
-        
-    #     # push input form
-    #     await interaction.response.send_modal(IdentityForm(interaction))
+        # push input form
+        await interaction.response.send_modal(IdentityForm(interaction, dbid))
     
     @app_commands.command(name="whitelist", description="whitelist an account")
     async def whitelist(self, interaction: Interaction, account: User):
@@ -60,7 +59,7 @@ class Identities(commands.Cog):
                 message = f"{Emoji.print(Emoji, emoji_name='shrug')} This account is already whitelisted."
             else:
                 # activate account
-                if Contributor.activate_contributor(account.id):
+                if Contributor.activate_contributor(Contributor, account.id):
                     message = f"{Emoji.print(Emoji, emoji_name='check')} Account [{str(account)}] has been added to the whitelist."
                 else:
                     message = f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong, we could not whitelist account [{str(account)}]."
@@ -96,7 +95,7 @@ class Identities(commands.Cog):
         dbid = Contributor.get_active_contributor_by_discord_id(account.id)
         if dbid:
             # deactivate user
-            if Contributor.deactivate_contributor(account.id):
+            if Contributor.deactivate_contributor(Contributor, account.id):
                 message = f"{Emoji.print(Emoji, emoji_name='check')} Account [{str(account)}] has been added to the graylist."
             else:
                 message = f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong, we could not graylist account [{str(account)}]."
@@ -113,91 +112,65 @@ class Identities(commands.Cog):
         return
 
 
-# class IdentityForm(ui.Modal):
-#     account_id = 0
-#     account = ""
+class IdentityForm(ui.Modal):
+    account = ""
 
-#     def __init__(self, interaction: Interaction):
-#         super().__init__(title=f"0L Identity Form: {interaction.user}")
+    def __init__(self, interaction: Interaction, dbid: Tuple):
+        super().__init__(title=f"0L Warrior Identity")
         
-#         self.discord_id = interaction.user.id
-#         self.discord_name = str(interaction.user)
+        self.account = "" if not dbid[1] else dbid[1]
         
-#         dbid = Contributor.get_active_contributor_by_discord_id(interaction.user.id)
-#         self.account_id = dbid[0]
-#         self.account = "" if not dbid[1] else dbid[1]
+        # Define the textbox input
+        self.account_input = ui.TextInput(
+            label="0L Address (only slow wallets)", 
+            style=TextStyle.short,
+            placeholder="Insert slow wallet address", 
+            required=True,
+            default=self.account,
+            max_length=32)
         
-#         # Define the textbox input
-#         self.account_input = ui.TextInput(
-#             label="0L Address (only slow wallets)", 
-#             style=TextStyle.short,
-#             placeholder="Insert slow wallet address", 
-#             required=True,
-#             default=self.account,
-#             min_length=32, 
-#             max_length=32)
-        
-#         # Add the textbox input to the form
-#         self.add_item(self.account_input)
+        # Add the textbox input to the form
+        self.add_item(self.account_input)
 
-#     async def on_submit(self, interaction: Interaction):
-#         """
-#             This function is called when the user submits the form.
-#         """
-#         account_input = self.account_input.value.lower()
+    async def on_submit(self, interaction: Interaction):
+        """
+            This function is called when the user submits the form.
+        """
+        account_input = self.account_input.value.lower()
+        if len(account_input) < 32:
+            await interaction.followup.send(
+                f"{Emoji.print(Emoji, emoji_name='cross_red')} Address must be 32 characters long.", 
+                ephemeral=True
+            )
+            return
 
-#         # calling this function again in case identities have changed.
-#         dbid = Contributor.get_active_contributor_by_discord_id(interaction.user.id)
-#         if not dbid:
-#             await interaction.response.send_message(
-#                 f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong. Please try again or contact one of the administrators.", 
-#                 ephemeral=True
-#             )
-#             return
+        # calling this function again in case identities have changed.
+        dbid = Contributor.get_active_contributor_by_discord_id(interaction.user.id)
+        if not dbid or len(dbid) == 0:
+            await interaction.followup.send(
+                f"{Emoji.print(Emoji, emoji_name='cross_red')} Your account doesn't seem to be whitelisted.", 
+                ephemeral=True
+            )
+            return
         
-#         account_db = "" if not dbid[1] else dbid[1]
-#         history = dbid[2]
-#         val_check = is_slow_wallet(account_input)
+        account_db = "" if not dbid[1] else dbid[1]
+        val_check = is_slow_wallet(account_input)
 
-#         if account_db == account_input:
-#             message = f"{Emoji.print(Emoji, emoji_name='shrug')} Nothing changed."
-#         elif not val_check:
-#             message = f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong. Please try again or contact one of the administrators"
-#         elif val_check["status"] == "Error":
-#             message = f"{Emoji.print(Emoji, emoji_name='cross_red')} {val_check['message']}" 
-#         elif val_check["status"] == "Success":
-#             # checking history
-#             if history:
-#                 # get existing object
-#                 print(f"history={history}")
-#                 hobj = dumps(history)
-#                 print(f"dumps(history)={hobj}")
-#             else:
-#                 # create history object
-#                 hobj = {
-#                     "history": []
-#                 }
-            
-#             # add old address to history object
-#             hobj["history"].append(
-#                 {
-#                     "address": account_db, 
-#                     "timestamp_end": datetime.strftime(datetime.now(), Config.FORMAT_TIMESTAMP)
-#                 }
-#             )
-
-#             c = Contributor(
-#                 discord_id = interaction.user.id,
-#                 address = account_input
-#             )
-#             c.id = dbid[0]
-#             c.history = hobj
-#             session.merge(c)
-#             session.commit()
-#             message = f"{Emoji.print(Emoji, emoji_name='check')} Your identity has been saved!"
+        if account_db == account_input:
+            message = f"{Emoji.print(Emoji, emoji_name='shrug')} Nothing changed."
+        elif not val_check:
+            message = f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong. Please try again or contact one of the administrators"
+        elif val_check["status"] == "Error":
+            message = f"{Emoji.print(Emoji, emoji_name='cross_red')} {val_check['message']}" 
+        elif val_check["status"] == "Success":
+            # wallet is a confirmed slow wallet!
+            if Contributor.add_address(Contributor, interaction.user.id, account_input):
+                message = f"{Emoji.print(Emoji, emoji_name='check')} Your identity has been saved!"
+            else:
+                message = f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong. Please try again or contact one of the administrators"
         
-#         # response.send_message because?
-#         await interaction.response.send_message(message, ephemeral=True)
+        # response.send_message because?
+        await interaction.response.send_message(message, ephemeral=True)
 
 
 async def setup(bot: commands.Bot):

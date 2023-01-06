@@ -33,7 +33,13 @@ def is_slow_wallet(address: AnyStr) -> Dict:
             if splitted[2].isnumeric():
                 return {"status": "Success", "message": "Account is slow wallet"}
             else:
-                return {"status": "Error", "message": line.replace('\x1b[0m\x1b[0m\x1b[1m\x1b[36mUNLOCKED BALANCE\x1b[0m ', '').replace('\n', '')}
+                return {
+                    "status": "Error", 
+                    "message": line\
+                        .replace('\x1b[0m\x1b[0m\x1b[1m\x1b[36mUNLOCKED BALANCE\x1b[0m ', '')\
+                        .replace('\n', '')\
+                        .replace('UNLOCKED BALANCE ', '')
+                    }
     
     return {"status": "Error", "message": "No response from chain"}
 

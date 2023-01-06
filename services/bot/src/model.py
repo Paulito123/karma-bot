@@ -1,10 +1,11 @@
-from sqlalchemy import Column, DateTime, Integer, String, func, Boolean, BigInteger
+from sqlalchemy import Column, DateTime, Integer, String, func, Boolean, BigInteger, update
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import JSONB
 from typing import List, AnyStr, Tuple
 from datetime import datetime
 from src.connect import engine, session
 from json import dumps
+from .config import Config
 
 
 Base = declarative_base()
@@ -99,38 +100,51 @@ class Contributor(Base):
                 Contributor.discord_id==discord_id)\
             .first()
     
-    def activate_contributor(discord_id: int) -> Boolean:
+    def __change_status(discord_id: int, is_act: int):
         try:
-            c = session\
-                .query(Contributor.id)\
-                .where(Contributor.discord_id==discord_id)\
-                .first()
-            contrib = Contributor(
-                discord_id = discord_id,
-                is_active = 1
-            )
-            contrib.id = c[0]
-            session.merge(contrib)
-            session.commit()
+            c = update(Contributor)
+            c = c.values({"is_active": is_act})
+            c = c.where(Contributor.discord_id == discord_id)
+            engine.execute(c)
             return True
         except Exception as e:
+            print(e)
             return False
     
-    def deactivate_contributor(discord_id: int) -> Boolean:
+    def activate_contributor(self, discord_id: int) -> Boolean:
+        return self.__change_status(discord_id, 1)
+    
+    def deactivate_contributor(self, discord_id: int) -> Boolean:
+        return self.__change_status(discord_id, 0)
+    
+    def add_address(self, discord_id: int, new_address: AnyStr) -> Boolean:
         try:
-            c = session\
-                .query(Contributor.id)\
-                .where(Contributor.discord_id==discord_id)\
-                .first()
-            contrib = Contributor(
-                discord_id = discord_id,
-                is_active = 0
+            # checking history
+            cobj = self.get_active_contributor_by_discord_id(discord_id)
+            if cobj[2] and len(cobj[2] > 0):
+                # get existing object
+                hobj = dumps(cobj[2])
+            else:
+                # create history object
+                hobj = {
+                    "history": []
+                }
+            
+            # add old address to history object
+            hobj["history"].append(
+                {
+                    "address": cobj[1], 
+                    "timestamp_end": datetime.strftime(datetime.now(), Config.FORMAT_TIMESTAMP)
+                }
             )
-            contrib.id = c[0]
-            session.merge(contrib)
-            session.commit()
-            return True
+
+            c = update(Contributor)
+            c = c.values({"address": new_address})
+            c = c.values({"history": hobj})
+            c = c.where(Contributor.discord_id == discord_id)
+            engine.execute(c)
         except Exception as e:
+            print(e)
             return False
     
     def add_contributor(discord_id: int) -> None:
