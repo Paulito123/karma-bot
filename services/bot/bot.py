@@ -3,7 +3,7 @@ import os
 import sys
 from discord.ext import commands
 from src.model import Contributor
-from src.util.github_util import get_identities
+# from src.util.github_util import get_identities
 
 
 class Client(commands.Bot):
@@ -34,11 +34,11 @@ if __name__ == "__main__":
     # This script takes 1 or 0 arguments. If the first argument == 1, then 
     # the database is initially fed with data from the github file.
     if len(sys.argv) > 1:
-        print(f"val={sys.argv[1]} & type={type(sys.argv[1])}")
         if sys.argv[1] == "1":
-            data = get_identities()
-            print(data)
-            Contributor.load_contrib_data(data)
+            ...
+            # data = get_identities()
+            # print(data)
+            # Contributor.load_contrib_data(data)
 
     # Start the client app
     client.run(os.getenv("DISCORD_BOT_SECRET"))
