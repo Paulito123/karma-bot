@@ -24,9 +24,6 @@ RUN chmod +x /usr/src/app/bin/ol
 # add ol path to PATH
 ENV PATH "$PATH:/usr/src/app/bin"
 
-# copy .certs dir
-COPY ./.certs /root/.certs
-
 # install dependencies
 RUN apt-get update && apt-get install -y netcat
 
