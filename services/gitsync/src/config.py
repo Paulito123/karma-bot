@@ -8,4 +8,7 @@ class Config():
     GITHUB_DATA_DIR = os.getenv("GITHUB_DATA_DIR")
     CONTRIBUTORS_FILENAME = os.getenv("CONTRIBUTORS_FILENAME")
     PAYMENTS_FILENAME = os.getenv("PAYMENTS_FILENAME")
+    FORMAT_TIMESTAMP = "%Y-%m-%dT%H:%M:%S"
+    FORMAT_TIMESTAMP_TZ = '%Y-%m-%dT%H:%M:%S.%f%z'
+    SYNC_INTERVAL = 15
     

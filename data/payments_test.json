@@ -1,30 +1,38 @@
 [
-    {
-    "transaction":"<TBD>",
-    "type":1,
-    "details":
-        {
-        "memo": "Karma Hustle bounty for gnudrew for completing the first batch of missions in the analytics project, specifically making permission tree data accessible.",
-        "missions":
-            [
-                {
-                "name": "Validator Permission Tree Scraper",
-                "recordURL":"https://airtable.com/appuiDshjiBzOAGl2/tblixhNzkEaKt3a75/viwlz7S2kmgCkoHFS/rec4D7I4k2KS4ytt5",
-                "author":"27de1f87599fd1f8ae5bd1101511d546",
-                "worker":"<gnudrew's account here>",
-                "reviewer":"562945a0318e392740f25e9630f10ea9",
-                "artifacts":["<github link to code>"],
-                "arbitration/dispute": "flag"
-                },
-                {
-                "name": "API for permission tree db",
-                "recordURL": "https://airtable.com/appuiDshjiBzOAGl2/tblixhNzkEaKt3a75/viwlz7S2kmgCkoHFS/recXtnhbiUpaBMKQx",
-                "author": "27de1f87599fd1f8ae5bd1101511d546",
-                "worker": "<gnudrew's account here>",
-                "reviewer": "562945a0318e392740f25e9630f10ea9",
-                "artifacts":["<github link to code>"]
-                }
-            ]
-        }
-    }
+  {
+    "address": "00000000000000000000000000000001",
+    "discord_name": "Nima#1765",
+    "issue_link": "https://github.com/nimadebi/karma-bot/issues/3",
+    "task_description": null,
+    "amount": "5000",
+    "memo": "payment for Nima's contributions to closed issues task regarding karma-bot",
+    "tx_hash": "<SOME TX HASH>"
+  },
+  {
+    "address": "00000000000000000000000000000001",
+    "discord_name": "Nima#1765",
+    "issue_link": "https://github.com/nimadebi/karma-bot/issues/3",
+    "task_description": null,
+    "amount": "5000",
+    "memo": "paid nima for karma-bot closed issues task",
+    "tx_hash": "<some tx>"
+  },
+  {
+    "address": "00000000000000000000000000000001",
+    "discord_name": "Nima#1765",
+    "issue_link": "",
+    "task_description": null,
+    "amount": "2500",
+    "memo": "",
+    "tx_hash": "tx hash"
+  },
+  {
+    "address": "00000000000000000000000000000001",
+    "discord_name": "Nima#1765",
+    "issue_link": "https://github.com/nimadebi/karma-bot/issues/4",
+    "task_description": "build the closed issue getter",
+    "amount": "5000",
+    "memo": "this is for the second test",
+    "tx_hash": "tx hash here"
+  }
 ]
