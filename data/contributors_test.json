@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "timestamp_last_update": "2023-01-05T22:00:00",
   "data": [
@@ -17,3 +18,70 @@
     }
   ]
 }
+=======
+[
+  {
+    "account": "27de1f87599fd1f8ae5bd1101511d546",
+    "type": 0,
+    "details": {
+      "githubId": "mzargham",
+      "discordId": "250086586450968576",
+      "discordName": "mZ#3472",
+      "twitterId": "mzargham"
+    }
+  },
+  {
+    "account": "562945a0318e392740f25e9630f10ea9",
+    "type": 0,
+    "details": {
+      "githubId": "matttyb80",
+      "discordId": "619213633255374858",
+      "discordName": "B.#2574"
+    }
+  },
+  {
+    "account": "00000000000000000000000000000001",
+    "type": 0,
+    "details": {
+      "discordId": 196701369313394692,
+      "discordName": "Nima#1765",
+      "githubId": "nimadebi",
+      "twitterId": "tweeta"
+    }
+  },
+  {
+    "account": "None",
+    "type": 0,
+    "details": {
+      "discordId": 196701369313394692,
+      "discordName": "Nima#1765"
+    }
+  },
+  {
+    "account": "None",
+    "type": 0,
+    "details": {
+      "discordId": 196701369313394692,
+      "discordName": "Nima#1765"
+    }
+  },
+  {
+    "account": "None",
+    "type": 0,
+    "details": {
+      "discordId": 196701369313394692,
+      "discordName": "Nima#1765"
+    }
+  },
+  {
+    "account": "5F8AC83A9B3BF2EFF20A6C16CD05C111",
+    "type": 0,
+    "details": {
+      "discordId": 776520842070720514,
+      "discordName": "Paulito#0564",
+      "githubId": "https://github.com/Paulito123",
+      "twitterId": "123"
+    }
+  }
+]
+>>>>>>> cfb19723e96f14dff67c7256a039abb1732d9d1d
