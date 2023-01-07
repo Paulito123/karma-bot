@@ -3,16 +3,12 @@ from discord import (
     User, 
     Interaction,
     ui,
-    TextStyle,
-    Object as DObject
+    TextStyle
 )
 from discord.ext import commands
-from src.util.ol_util import is_slow_wallet
-from src.connect import session
+from src.util.ol_util import is_slow_wallet_as, is_valid_address_format
 from src.model import Contributor
 from typing import Tuple
-from datetime import datetime
-from json import loads, dumps
 from src.config import Config
 from src.util.emoji import Emoji
 
@@ -20,21 +16,6 @@ from src.util.emoji import Emoji
 class Identities(commands.Cog):
     def __init__(self, client):
         self.client = client
-    
-    @app_commands.command(name="account", description="update your primary wallet address")
-    async def modal(self, interaction: Interaction):
-        # Show thinking message:
-        # await interaction.response.defer()
-        
-        # check is address is known
-        dbid = Contributor.get_active_contributor_by_discord_id(interaction.user.id)
-        if not dbid or len(dbid) == 0:
-            message = f"{Emoji.print(Emoji, emoji_name='warning')} Only whitelisted contributors can manage their warrior identity."
-            await interaction.response.send_message(message, ephemeral=True)
-            return
-        
-        # push input form
-        await interaction.response.send_modal(IdentityForm(interaction, dbid))
     
     @app_commands.command(name="whitelist", description="whitelist an account")
     async def whitelist(self, interaction: Interaction, account: User):
@@ -110,12 +91,30 @@ class Identities(commands.Cog):
             ephemeral=True
         )
         return
+    
+    @app_commands.command(name="account", description="update your primary wallet address")
+    async def modal(self, interaction: Interaction):
+        # check is address is known
+        dbid = Contributor.get_active_contributor_by_discord_id(interaction.user.id)
+        if not dbid or len(dbid) == 0:
+            message = f"{Emoji.print(Emoji, emoji_name='warning')} Only whitelisted contributors can manage their warrior identity."
+            await interaction.response.send_message(message, ephemeral=True)
+            return
+        
+        # Show thinking message:
+        # Error: Command 'account' raised an exception: InteractionResponded: This interaction has already been responded to before
+        # await interaction.response.defer()
+
+        # push input form
+        await interaction.response.send_modal(IdentityForm(interaction, dbid))
 
 
 class IdentityForm(ui.Modal):
     account = ""
 
     def __init__(self, interaction: Interaction, dbid: Tuple):
+        """ IdentityForm contructor """
+
         super().__init__(title=f"0L Warrior Identity")
         
         self.account = "" if not dbid[1] else dbid[1]
@@ -133,43 +132,55 @@ class IdentityForm(ui.Modal):
         self.add_item(self.account_input)
 
     async def on_submit(self, interaction: Interaction):
-        """
-            This function is called when the user submits the form.
-        """
+        """ This function is called when the user submits the form. """
+
+        # checkking account validity
         account_input = self.account_input.value.lower()
-        if len(account_input) < 32:
-            await interaction.followup.send(
-                f"{Emoji.print(Emoji, emoji_name='cross_red')} Address must be 32 characters long.", 
+        if not is_valid_address_format(account_input):
+            await interaction.response.send_message(
+                f"{Emoji.print(Emoji, emoji_name='cross_red')} Input must be a valid 0L address.", 
                 ephemeral=True
             )
             return
 
-        # calling this function again in case identities have changed.
+        # Even though this is checked in the parent function, we want to check 
+        # again because we don't know how much time is between calling the 
+        # /account command and submitting the form.
         dbid = Contributor.get_active_contributor_by_discord_id(interaction.user.id)
         if not dbid or len(dbid) == 0:
-            await interaction.followup.send(
-                f"{Emoji.print(Emoji, emoji_name='cross_red')} Your account doesn't seem to be whitelisted.", 
+            await interaction.response.send_message(
+                f"{Emoji.print(Emoji, emoji_name='cross_red')} Only whitelisted contributors can manage their warrior identity.", 
                 ephemeral=True
             )
             return
         
+        # check the input
         account_db = "" if not dbid[1] else dbid[1]
-        val_check = is_slow_wallet(account_input)
-
         if account_db == account_input:
-            message = f"{Emoji.print(Emoji, emoji_name='shrug')} Nothing changed."
-        elif not val_check:
+            message = f"{Emoji.print(Emoji, emoji_name='shrug')} Same address submitted, nothing changed."
+            await interaction.response.send_message(message, ephemeral=True)
+            return
+
+        # check if wallet is slow wallet
+        val_check = await is_slow_wallet_as(account_input)
+
+        if not val_check:
+            # error happened when trying to use tools to access chain
             message = f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong. Please try again or contact one of the administrators"
         elif val_check["status"] == "Error":
+            # pass message that is returned from chain tools
             message = f"{Emoji.print(Emoji, emoji_name='cross_red')} {val_check['message']}" 
         elif val_check["status"] == "Success":
             # wallet is a confirmed slow wallet!
             if Contributor.add_address(Contributor, interaction.user.id, account_input):
                 message = f"{Emoji.print(Emoji, emoji_name='check')} Your identity has been saved!"
             else:
+                # error happened when trying to update database
                 message = f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong. Please try again or contact one of the administrators"
         
-        # response.send_message because?
+        # response.send_message because followup.send raises an error:
+        # Error: Command 'account' raised an exception: InteractionResponded: 
+        # This interaction has already been responded to before...
         await interaction.response.send_message(message, ephemeral=True)
 
 

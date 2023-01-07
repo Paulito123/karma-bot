@@ -4,7 +4,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from typing import List, AnyStr, Tuple
 from datetime import datetime
 from src.connect import engine, session
-from json import dumps
+from json import dumps, loads
 from .config import Config
 
 
@@ -64,7 +64,7 @@ class Contributor(Base):
                 list_out.append(obj_out)
             return dumps(list_out)
         except Exception as e:
-            print(f"[{datetime.now()}]:[ERROR]:{e}")
+            print(f"[{datetime.now()}]:ERROR:{e}")
         return []
             
     def load_contrib_data(data: List) -> None:
@@ -76,7 +76,7 @@ class Contributor(Base):
                     history = contrib["history"]
                 )
         except Exception as e:
-            print(f"[{datetime.now()}]:[ERROR]:{e}")
+            print(f"[{datetime.now()}]:ERROR:{e}")
     
     def get_active_contributor_by_discord_id(discord_id: int) -> Tuple:
         return session\
@@ -108,7 +108,7 @@ class Contributor(Base):
             engine.execute(c)
             return True
         except Exception as e:
-            print(e)
+            print(f"[{datetime.now()}]:ERROR:{e}")
             return False
     
     def activate_contributor(self, discord_id: int) -> Boolean:
@@ -121,31 +121,32 @@ class Contributor(Base):
         try:
             # checking history
             cobj = self.get_active_contributor_by_discord_id(discord_id)
-            if cobj[2] and len(cobj[2] > 0):
+            old_address = cobj[1]
+            if cobj[2] and len(cobj[2]['history']) > 0:
                 # get existing object
-                hobj = dumps(cobj[2])
+                hobj = cobj[2]
             else:
                 # create history object
                 hobj = {
                     "history": []
                 }
-            
-            # add old address to history object
-            hobj["history"].append(
-                {
-                    "address": cobj[1], 
-                    "timestamp_end": datetime.strftime(datetime.now(), Config.FORMAT_TIMESTAMP)
-                }
-            )
 
             c = update(Contributor)
             c = c.values({"address": new_address})
-            c = c.values({"history": hobj})
+            if old_address and len(old_address) == 32:
+                hobj["history"].append(
+                    {
+                        "address": old_address, 
+                        "timestamp_end": f"{datetime.strftime(datetime.now(), Config.FORMAT_TIMESTAMP)}"
+                    }
+                )
+                c = c.values({"history": hobj})
             c = c.where(Contributor.discord_id == discord_id)
             engine.execute(c)
         except Exception as e:
-            print(e)
+            print(f"[{datetime.now()}]:ERROR:{e}")
             return False
+        return True
     
     def add_contributor(discord_id: int) -> None:
         c = session\

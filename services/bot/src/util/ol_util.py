@@ -1,6 +1,7 @@
-import os
-import re
+from os import popen
+from re import search
 from typing import AnyStr, Dict
+from datetime import datetime
 
 
 def is_slow_wallet(address: AnyStr) -> Dict:
@@ -16,33 +17,80 @@ def is_slow_wallet(address: AnyStr) -> Dict:
       - Error > Error, cannot find account state for <address>
       - Error > Error, account is not a slow wallet
     """
-    
-    # check if valid type is passed
-    if type(address) != str:
-        return {"status": "Error", "message": "Unvalid address"}
+    try:
+        # check if valid type is passed
+        if type(address) != str:
+            return {"status": "Error", "message": "Unvalid address"}
 
-    # check if the address is valid via regex
-    regex_out = re.search("[a-fA-F0-9]{32}$", address)
-    if not regex_out:
-        return {"status": "Error", "message": "Unvalid address"}
-    
-    # check if the address is in fact existing on-chain
-    with os.popen(f"ol -a {address} query -u") as f:
-        for line in f.readlines():
-            splitted = line.split()
-            if splitted[2].isnumeric():
-                return {"status": "Success", "message": "Account is slow wallet"}
-            else:
-                return {
-                    "status": "Error", 
-                    "message": line\
-                        .replace('\x1b[0m\x1b[0m\x1b[1m\x1b[36mUNLOCKED BALANCE\x1b[0m ', '')\
-                        .replace('\n', '')\
-                        .replace('UNLOCKED BALANCE ', '')
-                    }
-    
-    return {"status": "Error", "message": "No response from chain"}
+        # check if the address format is valid
+        if not is_valid_address_format(address):
+            return {"status": "Error", "message": "Unvalid address"}
+        
+        # check if the address is in fact existing on-chain
+        with popen(f"ol -a {address} query -u") as f:
+            for line in f.readlines():
+                splitted = line.split()
+                if splitted[2].isnumeric():
+                    return {"status": "Success", "message": "Account is slow wallet"}
+                else:
+                    return {
+                        "status": "Error", 
+                        "message": line\
+                            .replace('\x1b[0m\x1b[0m\x1b[1m\x1b[36mUNLOCKED BALANCE\x1b[0m ', '')\
+                            .replace('\n', '')\
+                            .replace('UNLOCKED BALANCE ', '')
+                        }
+    except Exception as e:
+        print(f"[{datetime.now()}]:ERROR:{e}")
+        return {"status": "Error", "message": "No response from chain"}
 
+
+async def is_slow_wallet_as(address: AnyStr) -> Dict:
+    """
+    Checks if a given address is a 'slow' wallet.
+
+    :param address: the address to check
+
+    :return: message: Possible return values:
+      - Error > Unvalid address
+      - Succes > Account is slow wallet
+      - Error > No response from chain
+      - Error > Error, cannot find account state for <address>
+      - Error > Error, account is not a slow wallet
+    """
+    try:
+        # check if valid type is passed
+        if type(address) != str:
+            return {"status": "Error", "message": "Unvalid address"}
+
+        # check if the address format is valid
+        if not is_valid_address_format(address):
+            return {"status": "Error", "message": "Unvalid address"}
+        
+        # check if the address is in fact existing on-chain
+        with popen(f"ol -a {address} query -u") as f:
+            for line in f.readlines():
+                splitted = line.split()
+                if splitted[2].isnumeric():
+                    return {"status": "Success", "message": "Account is slow wallet"}
+                else:
+                    return {
+                        "status": "Error", 
+                        "message": line\
+                            .replace('\x1b[0m\x1b[0m\x1b[1m\x1b[36mUNLOCKED BALANCE\x1b[0m ', '')\
+                            .replace('\n', '')\
+                            .replace('UNLOCKED BALANCE ', '')
+                        }
+    except Exception as e:
+        print(f"[{datetime.now()}]:ERROR:{e}")
+        return {"status": "Error", "message": "No response from chain"}
+
+
+def is_valid_address_format(address: AnyStr):
+    if search("[a-fA-F0-9]{32}$", address):
+        return True
+    else:
+        return False
 
 # if __name__ == "__main__":
 #     test_list = [
