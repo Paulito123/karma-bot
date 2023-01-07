@@ -1,12 +1,10 @@
 from sqlalchemy import Column, DateTime, Integer, String, func, Boolean, BigInteger, update
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import JSONB
-from typing import List, AnyStr, Tuple
+from typing import AnyStr, Tuple
 from datetime import datetime
 from src.connect import engine, session
-from json import dumps, loads
 from .config import Config
-
 
 Base = declarative_base()
 
@@ -31,52 +29,6 @@ class Contributor(Base):
         self.discord_id = discord_id
         self.address = address
         self.is_active = is_active
-    
-    def upsert(
-        discord_id: Integer, 
-        address: AnyStr, 
-        history: AnyStr) -> None:
-            contrib = Contributor(discord_id)
-            contrib.address = address
-            contrib.history = history
-            session.merge(contrib)
-            session.commit()
-    
-    def generate_file_content() -> List:
-        try:
-            list_out = []
-            contrib_list = session\
-                .query(
-                    Contributor.discord_id, 
-                    Contributor.address,
-                    Contributor.history,
-                    Contributor.created_at,
-                    Contributor.updated_at)\
-                .all()
-            for contrib in contrib_list:
-                obj_out = {
-                    "discord_id": contrib[0],
-                    "address": contrib[1],
-                    "history": contrib[2],
-                    "created_at": contrib[3],
-                    "updated_at": contrib[4]
-                }
-                list_out.append(obj_out)
-            return dumps(list_out)
-        except Exception as e:
-            print(f"[{datetime.now()}]:ERROR:{e}")
-        return []
-            
-    def load_contrib_data(data: List) -> None:
-        try:
-            for contrib in data:
-                Contributor.upsert(
-                    discord_id = int(contrib["discord_id"]),
-                    address = contrib["address"],
-                    history = contrib["history"]
-                )
-        except Exception as e:
-            print(f"[{datetime.now()}]:ERROR:{e}")
     
     def get_active_contributor_by_discord_id(discord_id: int) -> Tuple:
         return session\
