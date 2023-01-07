@@ -2,7 +2,7 @@ from sqlalchemy import Column, DateTime, Integer, String, func, BigInteger
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import JSONB
 from typing import List
-from src.connect import engine, session
+from connect import engine, session
 from datetime import datetime
 
 Base = declarative_base()

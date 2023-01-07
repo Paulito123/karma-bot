@@ -1,0 +1,11 @@
+import os
+
+class Config():
+    GITHUB_APP_ID = os.getenv("GITHUB_APP_ID")
+    GITHUB_OWNER = os.getenv("GITHUB_OWNER")
+    GITHUB_KARMA_REPO = os.getenv("GITHUB_KARMA_REPO")
+    GITHUB_CERT_FILE_PATH = os.getenv("GITHUB_CERT_FILE_PATH")
+    GITHUB_DATA_DIR = os.getenv("GITHUB_DATA_DIR")
+    CONTRIBUTORS_FILENAME = os.getenv("CONTRIBUTORS_FILENAME")
+    PAYMENTS_FILENAME = os.getenv("PAYMENTS_FILENAME")
+    

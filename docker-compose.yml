@@ -27,6 +27,19 @@ services:
       - POSTGRES_PASSWORD=karma
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+  
+  gitsync:
+    container_name: karma-gitsync
+    build:
+      context: ./services/gitsync
+      dockerfile: Dockerfile
+    volumes:
+      - './services/gitsync/src:/usr/src/app'
+      - './services/gitsync/.certs:/usr/src/.certs'
+    env_file:
+      - ./services/gitsync/.env
+    depends_on:
+      - db
 
 volumes:
   postgres_data:

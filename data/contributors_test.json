@@ -1,16 +1,19 @@
-[
-  {
-    "discord_id": "250086586450968576",
-    "address": "27de1f87599fd1f8ae5bd1101511d546",
-    "history": [],
-    "is_slow": "False",
-    "is_key_role": "False"
-  },
-  {
-    "discord_id": "619213633255374858",
-    "address": "562945a0318e392740f25e9630f10ea9",
-    "history": [],
-    "is_slow": "False",
-    "is_key_role": "False"
-  }
-]
+{
+  "timestamp_last_update": "2023-01-05T22:00:00",
+  "data": [
+    {
+      "id": 1,
+      "discord_id": "250086586450968576",
+      "address": "27de1f87599fd1f8ae5bd1101511d546",
+      "history": [],
+      "is_active": 1
+    },
+    {
+      "id": 2,
+      "discord_id": "619213633255374858",
+      "address": "562945a0318e392740f25e9630f10ea9",
+      "history": [],
+      "is_active": 0
+    }
+  ]
+}

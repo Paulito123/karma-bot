@@ -18,11 +18,12 @@ COPY ./requirements.txt /usr/src/app/requirements.txt
 RUN pip install -r requirements.txt
 
 # copy app
-COPY ./src /usr/src/app/
+COPY . .
 
 # run entrypoint.sh
-COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+COPY ./entrypoint.sh /usr/src/entrypoint.sh
+RUN chmod +x /usr/src/entrypoint.sh
+ENTRYPOINT ["/usr/src/entrypoint.sh"]
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # run main.py
