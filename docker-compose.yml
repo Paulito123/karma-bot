@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+
+  bot:
+    container_name: karma-bot
+    build:
+      context: ./services/bot
+      dockerfile: Dockerfile
+    volumes:
+      - './services/bot/src:/usr/src/app/src'
+    restart: on-failure
+    env_file:
+      - ./services/bot/.env
+    depends_on:
+      - db
+  
+  db:
+    container_name: karma-db
+    build:
+      context: ./services/db
+      dockerfile: Dockerfile
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=karma
+      - POSTGRES_PASSWORD=karma
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  
+  gitsync:
+    container_name: karma-gitsync
+    build:
+      context: ./services/gitsync
+      dockerfile: Dockerfile
+    volumes:
+      - './services/gitsync/src:/usr/src/app'
+      - './services/gitsync/.certs:/usr/src/.certs'
+    env_file:
+      - ./services/gitsync/.env
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
