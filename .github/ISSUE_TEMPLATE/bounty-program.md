@@ -1,7 +1,7 @@
 ---
 name: Bounty Program
 about: Task definition for bounty related work item
-title: Bounty program
+title: "<work item title>"
 labels: ''
 assignees: ''
 
