@@ -27,7 +27,7 @@ class Identities(commands.Cog):
         if not hasattr(account, 'roles') or \
             Config.ROLE_NAME_KARMA_ADMIN not in [y.name for y in interaction.user.roles]:
             await interaction.followup.send(
-                f"{Emoji.print(Emoji, emoji_name='warning')} Sorry, your account is not allowed to whitelist other accounts.", 
+                f"{Emoji.print(Emoji, emoji_name='warning')} Sorry, your account does not have enough previleges to whitelist other accounts.", 
                 ephemeral=True
             )
             return
@@ -37,13 +37,13 @@ class Identities(commands.Cog):
         if dbid:
             # check if already flagged as active
             if dbid[3] == 1:
-                message = f"{Emoji.print(Emoji, emoji_name='shrug')} This account is already whitelisted."
+                message = f"{Emoji.print(Emoji, emoji_name='shrug')} Account [{str(account)}] is already whitelisted."
             else:
                 # activate account
                 if Contributor.activate_contributor(Contributor, account.id):
                     message = f"{Emoji.print(Emoji, emoji_name='check')} Account [{str(account)}] has been added to the whitelist."
                 else:
-                    message = f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong, we could not whitelist account [{str(account)}]."
+                    message = f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong, [{str(account)}] could not be whitelisted."
             await interaction.followup.send(
                 message, 
                 ephemeral=True
@@ -67,7 +67,7 @@ class Identities(commands.Cog):
         if not hasattr(account, 'roles') or \
             Config.ROLE_NAME_KARMA_ADMIN not in [y.name for y in interaction.user.roles]:
             await interaction.followup.send(
-                f"{Emoji.print(Emoji, emoji_name='warning')} Sorry, your account is not allowed to graylist other accounts.", 
+                f"{Emoji.print(Emoji, emoji_name='warning')} Sorry, your account does not have enough previleges to graylist other accounts.", 
                 ephemeral=True
             )
             return
@@ -79,7 +79,7 @@ class Identities(commands.Cog):
             if Contributor.deactivate_contributor(Contributor, account.id):
                 message = f"{Emoji.print(Emoji, emoji_name='check')} Account [{str(account)}] has been added to the graylist."
             else:
-                message = f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong, we could not graylist account [{str(account)}]."
+                message = f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong, [{str(account)}] could not be graylisted."
             await interaction.followup.send(
                 message, 
                 ephemeral=True
