@@ -1,5 +1,5 @@
 {
-  "timestamp_last_update": "2023-01-12T09:51:21.200837+0000",
+  "timestamp_last_update": "2023-01-12T09:51:23.200837+0000",
   "data": [
     {
       "discord_id": 843774090380443668,
@@ -10,34 +10,32 @@
     {
       "discord_id": 776520842070720514,
       "address": "2bfd96d8a674a360b733d16c65728d72",
-      "history": {
-        "history": [
-          {
-            "address": "2bfd96d8a674a360b733d16c65728d72",
-            "timestamp_end": "2023-01-07T18:04:02"
-          },
-          {
-            "address": "6da2b828f3018637379203940c639a95",
-            "timestamp_end": "2023-01-07T18:28:22"
-          },
-          {
-            "address": "2bfd96d8a674a360b733d16c65728d72",
-            "timestamp_end": "2023-01-10T16:07:10"
-          },
-          {
-            "address": "012338b54ba4625adcc313394d87819c",
-            "timestamp_end": "2023-01-10T16:19:32"
-          },
-          {
-            "address": "2bfd96d8a674a360b733d16c65728d72",
-            "timestamp_end": "2023-01-10T16:28:20"
-          },
-          {
-            "address": "012338b54ba4625adcc313394d87819c",
-            "timestamp_end": "2023-01-12T09:51:21"
-          }
-        ]
-      },
+      "history": [
+        {
+          "address": "2bfd96d8a674a360b733d16c65728d72",
+          "timestamp_end": "2023-01-07T18:04:02"
+        },
+        {
+          "address": "6da2b828f3018637379203940c639a95",
+          "timestamp_end": "2023-01-07T18:28:22"
+        },
+        {
+          "address": "2bfd96d8a674a360b733d16c65728d72",
+          "timestamp_end": "2023-01-10T16:07:10"
+        },
+        {
+          "address": "012338b54ba4625adcc313394d87819c",
+          "timestamp_end": "2023-01-10T16:19:32"
+        },
+        {
+          "address": "2bfd96d8a674a360b733d16c65728d72",
+          "timestamp_end": "2023-01-10T16:28:20"
+        },
+        {
+          "address": "012338b54ba4625adcc313394d87819c",
+          "timestamp_end": "2023-01-12T09:51:21"
+        }
+      ],
       "is_active": 1
     }
   ]
