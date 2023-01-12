@@ -1,5 +1,5 @@
 {
-  "timestamp_last_update": "2023-01-12T09:47:53.699356+0000",
+  "timestamp_last_update": "2023-01-12T09:51:21.200837+0000",
   "data": [
     {
       "discord_id": 843774090380443668,
@@ -9,7 +9,7 @@
     },
     {
       "discord_id": 776520842070720514,
-      "address": "012338b54ba4625adcc313394d87819c",
+      "address": "2bfd96d8a674a360b733d16c65728d72",
       "history": {
         "history": [
           {
@@ -31,6 +31,10 @@
           {
             "address": "2bfd96d8a674a360b733d16c65728d72",
             "timestamp_end": "2023-01-10T16:28:20"
+          },
+          {
+            "address": "012338b54ba4625adcc313394d87819c",
+            "timestamp_end": "2023-01-12T09:51:21"
           }
         ]
       },
