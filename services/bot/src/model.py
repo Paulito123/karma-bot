@@ -74,19 +74,17 @@ class Contributor(Base):
             # checking history
             cobj = self.get_active_contributor_by_discord_id(discord_id)
             old_address = cobj[1]
-            if cobj[2] and len(cobj[2]['history']) > 0:
+            if cobj[2] and len(cobj[2]) > 0:
                 # get existing object
                 hobj = cobj[2]
             else:
                 # create history object
-                hobj = {
-                    "history": []
-                }
+                hobj = []
 
             c = update(Contributor)
             c = c.values({"address": new_address})
             if old_address and len(old_address) == 32:
-                hobj["history"].append(
+                hobj.append(
                     {
                         "address": old_address, 
                         "timestamp_end": f"{datetime.strftime(datetime.now(), Config.FORMAT_TIMESTAMP)}"
@@ -114,4 +112,4 @@ class Contributor(Base):
             session.commit()
 
 
-Base.metadata.create_all(engine)
+# Base.metadata.create_all(engine)

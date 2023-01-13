@@ -94,7 +94,7 @@ class Identities(commands.Cog):
     
     @app_commands.command(name="account", description="update your primary wallet address")
     async def modal(self, interaction: Interaction):
-        # check is address is known
+        # check if address is known
         dbid = Contributor.get_active_contributor_by_discord_id(interaction.user.id)
         if not dbid or len(dbid) == 0:
             message = f"{Emoji.print(Emoji, emoji_name='warning')} Only whitelisted contributors can manage their warrior identity."
