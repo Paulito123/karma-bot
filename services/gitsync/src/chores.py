@@ -1,9 +1,13 @@
-from github_util import get_identities, push_identities
+from github_util import (
+    get_identities, 
+    push_identities,
+    get_issues
+)
 from datetime import datetime
 from config import Config
-from model import Contributor
+from model import Contributor, GithubIssue
 
-def sync_contributors():
+def sync_contributors() -> None:
     try:
         # get file from github
         contributors = get_identities()
@@ -13,7 +17,7 @@ def sync_contributors():
         
         # get last update date from db
         result = Contributor.get_update_metrics()
-        print(result)
+        
         db_last_ts = result[0]
         db_rec_count = result[1]
         
@@ -30,14 +34,21 @@ def sync_contributors():
             # If we arrive here, we assume the database is empty so we need to
             # push the file data to the database.
             # upload file to db
-            print(contributors)
             if Contributor.upload_contributors_json(contributors):
-                print(2)
                 # making sure the update timestamp is also pushed back to the file
                 identities = Contributor.get_contributors(Contributor)
-                print(identities)
                 push_identities(identities)
 
     except Exception as e:
         print(f"[{datetime.now()}]:ERROR:{e}")
-    
+
+
+def sync_issues() -> None:
+    try:
+        # itertate repos from which issues must be ingested
+        for repo in Config.ISSUES_REPO_LIST:
+            # get issues for a given repo
+            issues = get_issues(repository=repo, state="all")
+            GithubIssue.upload_gh_response(issues)
+    except Exception as e:
+        print(f"[{datetime.now()}]:ERROR:{e}")
