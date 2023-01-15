@@ -1,12 +1,6 @@
 {
-  "timestamp_last_update": "2023-01-15T17:45:30.859504+0000",
+  "timestamp_last_update": "2023-01-15T17:51:24.031115+0000",
   "data": [
-    {
-      "discord_id": 776520842070720514,
-      "address": "",
-      "history": null,
-      "is_active": 1
-    },
     {
       "discord_id": 1056465395881615400,
       "address": "",
@@ -18,6 +12,12 @@
       "address": "",
       "history": null,
       "is_active": 0
+    },
+    {
+      "discord_id": 776520842070720514,
+      "address": "5f8ac83a9b3bf2eff20a6c16cd05c111",
+      "history": null,
+      "is_active": 1
     }
   ]
 }
