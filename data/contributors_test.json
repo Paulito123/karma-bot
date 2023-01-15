@@ -1,50 +1,23 @@
 {
-  "timestamp_last_update": "2023-01-15T03:23:42.996177+0000",
+  "timestamp_last_update": "2023-01-15T17:45:30.859504+0000",
   "data": [
     {
-      "discord_id": 843774090380443668,
+      "discord_id": 776520842070720514,
       "address": "",
       "history": null,
       "is_active": 1
     },
     {
-      "discord_id": 776520842070720514,
-      "address": "5f8ac83a9b3bf2eff20a6c16cd05c111",
-      "history": [
-        {
-          "address": "2bfd96d8a674a360b733d16c65728d72",
-          "timestamp_end": "2023-01-07T18:04:02"
-        },
-        {
-          "address": "6da2b828f3018637379203940c639a95",
-          "timestamp_end": "2023-01-07T18:28:22"
-        },
-        {
-          "address": "2bfd96d8a674a360b733d16c65728d72",
-          "timestamp_end": "2023-01-10T16:07:10"
-        },
-        {
-          "address": "012338b54ba4625adcc313394d87819c",
-          "timestamp_end": "2023-01-10T16:19:32"
-        },
-        {
-          "address": "2bfd96d8a674a360b733d16c65728d72",
-          "timestamp_end": "2023-01-10T16:28:20"
-        },
-        {
-          "address": "012338b54ba4625adcc313394d87819c",
-          "timestamp_end": "2023-01-12T09:51:21"
-        },
-        {
-          "address": "2bfd96d8a674a360b733d16c65728d72",
-          "timestamp_end": "2023-01-12T09:56:38"
-        },
-        {
-          "address": "012338b54ba4625adcc313394d87819c",
-          "timestamp_end": "2023-01-13T16:31:52"
-        }
-      ],
+      "discord_id": 1056465395881615400,
+      "address": "",
+      "history": null,
       "is_active": 1
+    },
+    {
+      "discord_id": 843774090380443668,
+      "address": "",
+      "history": null,
+      "is_active": 0
     }
   ]
 }
