@@ -1,8 +1,8 @@
-import os
+# import os
 import json
-from github import Github, GithubIntegration, enable_console_debug_logging
+from github import Github, GithubIntegration#, enable_console_debug_logging
 from config import Config
-from typing import AnyStr, Dict, List, Union
+from typing import Dict, Union#, AnyStr, List
 from datetime import datetime
 
 DEFAULT_REPO = f"{Config.GITHUB_KARMA_OWNER}/{Config.GITHUB_KARMA_REPO}"
@@ -64,44 +64,44 @@ def push_identities(identities: Dict) -> None:
         print(f"[{datetime.now()}]:ERROR:{e}")
 
 
-# ISSUES
-def get_issues(repository: AnyStr=DEFAULT_REPO, state: AnyStr="all") -> Union[List, None]:
-    """
-    Get issues from a github repo.
-    """
-    try:
-        git_connection = get_token()
-        repo = git_connection.get_repo(repository)
-        return repo.get_issues(state=state)
-    except Exception as e:
-        print(f"[{datetime.now()}]:ERROR:{e}")
-        return None
+# # ISSUES
+# def get_issues(repository: AnyStr=DEFAULT_REPO, state: AnyStr="all") -> Union[List, None]:
+#     """
+#     Get issues from a github repo.
+#     """
+#     try:
+#         git_connection = get_token()
+#         repo = git_connection.get_repo(repository)
+#         return repo.get_issues(state=state)
+#     except Exception as e:
+#         print(f"[{datetime.now()}]:ERROR:{e}")
+#         return None
 
 
-# PAYMENTS
-def get_payments() -> Union[List, None]:
-    """
-    Get all payments from the github repo.
-    """
-    try:
-        git_connection = get_token()
-        repo = git_connection.get_repo(DEFAULT_REPO)
-        content = repo.get_contents(f"{Config.GITHUB_KARMA_DATA_DIR}/{Config.GITHUB_KARMA_CONTRIBUTORS_FILENAME}")
-        return json.loads(content.decoded_content.decode())
-    except Exception as e:
-        print(f"[{datetime.now()}]:ERROR:{e}")
-        return None
+# # PAYMENTS
+# def get_payments() -> Union[List, None]:
+#     """
+#     Get all payments from the github repo.
+#     """
+#     try:
+#         git_connection = get_token()
+#         repo = git_connection.get_repo(DEFAULT_REPO)
+#         content = repo.get_contents(f"{Config.GITHUB_KARMA_DATA_DIR}/{Config.GITHUB_KARMA_CONTRIBUTORS_FILENAME}")
+#         return json.loads(content.decoded_content.decode())
+#     except Exception as e:
+#         print(f"[{datetime.now()}]:ERROR:{e}")
+#         return None
 
 
-def push_payments(payments: Dict) -> None:
-    """
-    Pushes the payments to github.
-    :param payments: updated json file.
-    """
-    try:
-        git_connection = get_token()
-        repo = git_connection.get_repo(DEFAULT_REPO)
-        content = repo.get_contents(f"{Config.GITHUB_KARMA_DATA_DIR}/{Config.GITHUB_KARMA_CONTRIBUTORS_FILENAME}")
-        repo.update_file(content.path, "updated payments", json.dumps(payments, indent=2), content.sha)
-    except Exception as e:
-        print(f"[{datetime.now()}]:ERROR:{e}")
+# def push_payments(payments: Dict) -> None:
+#     """
+#     Pushes the payments to github.
+#     :param payments: updated json file.
+#     """
+#     try:
+#         git_connection = get_token()
+#         repo = git_connection.get_repo(DEFAULT_REPO)
+#         content = repo.get_contents(f"{Config.GITHUB_KARMA_DATA_DIR}/{Config.GITHUB_KARMA_CONTRIBUTORS_FILENAME}")
+#         repo.update_file(content.path, "updated payments", json.dumps(payments, indent=2), content.sha)
+#     except Exception as e:
+#         print(f"[{datetime.now()}]:ERROR:{e}")

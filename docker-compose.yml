@@ -11,7 +11,7 @@ services:
       - './services/bot/src:/usr/src/app/src'
     restart: on-failure
     env_file:
-      - ./services/bot/.env
+      - ./services/bot/.env.dev
     depends_on:
       - db
   
@@ -37,7 +37,7 @@ services:
       - './services/gitsync/src:/usr/src/app'
       - './services/gitsync/.certs:/usr/src/.certs'
     env_file:
-      - ./services/gitsync/.env
+      - ./services/gitsync/.env.dev
     depends_on:
       - db
 

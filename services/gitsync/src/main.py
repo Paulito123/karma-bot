@@ -1,4 +1,4 @@
-from chores import sync_contributors, sync_issues
+from chores import sync_contributors#, sync_issues
 from time import sleep
 from config import Config
 from datetime import datetime, timedelta
@@ -20,8 +20,8 @@ if __name__ == "__main__":
         
         # TRIGGER EVERY DAY
         if last_trigger_day <= datetime.now() - timedelta(days=1):
-            # sync_issues()
             ...
+        # sync_issues()
         
         # sync end time
         end_cycle = datetime.now()
