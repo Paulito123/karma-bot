@@ -1,38 +1,22 @@
-[
-  {
-    "address": "00000000000000000000000000000001",
-    "discord_name": "Nima#1765",
-    "issue_link": "https://github.com/nimadebi/karma-bot/issues/3",
-    "task_description": null,
-    "amount": "5000",
-    "memo": "payment for Nima's contributions to closed issues task regarding karma-bot",
-    "tx_hash": "<SOME TX HASH>"
-  },
-  {
-    "address": "00000000000000000000000000000001",
-    "discord_name": "Nima#1765",
-    "issue_link": "https://github.com/nimadebi/karma-bot/issues/3",
-    "task_description": null,
-    "amount": "5000",
-    "memo": "paid nima for karma-bot closed issues task",
-    "tx_hash": "<some tx>"
-  },
-  {
-    "address": "00000000000000000000000000000001",
-    "discord_name": "Nima#1765",
-    "issue_link": "",
-    "task_description": null,
-    "amount": "2500",
-    "memo": "",
-    "tx_hash": "tx hash"
-  },
-  {
-    "address": "00000000000000000000000000000001",
-    "discord_name": "Nima#1765",
-    "issue_link": "https://github.com/nimadebi/karma-bot/issues/4",
-    "task_description": "build the closed issue getter",
-    "amount": "5000",
-    "memo": "this is for the second test",
-    "tx_hash": "tx hash here"
-  }
-]
+{
+  "timestamp_last_update": "2023-01-07T18:29:09.552369+0000",
+  "issues_closed": ["1234567890"],
+  "data": [
+    {
+      "tx_hash": "<SOME TX HASH>",
+      "discord_details_recipient": 
+        {
+          "name": "Nima#1765",
+          "id": "1234567890"
+        },
+      "address_recipient": "00000000000000000000000000000001",
+      "issue_details": 
+        {
+          "issue_link": "https://github.com/nimadebi/karma-bot/issues/2",
+          "issue_id": "1234567890"
+        },
+      "amount": "5000",
+      "memo": "payment for Nima's contributions to closed issues task regarding karma-bot"
+    }
+  ]
+}
