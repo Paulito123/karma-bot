@@ -5,7 +5,7 @@ from config import Config
 from typing import Dict, Union#, AnyStr, List
 from datetime import datetime
 
-DEFAULT_REPO = f"{Config.GITHUB_KARMA_OWNER}/{Config.GITHUB_KARMA_REPO}"
+DEFAULT_REPO = f"{Config.GITHUB_KARMA_DATA_OWNER}/{Config.GITHUB_KARMA_DATA_REPO}"
 
 # Uncomment to enable extensive logging
 # enable_console_debug_logging()
@@ -16,7 +16,7 @@ def get_token() -> Github:
     """
     # Read the bot certificate
     with open(
-            f"{Config.CERT_DIR_PATH}{Config.GITHUB_KARMA_CERT_FILENAME}",
+            f"{Config.CERT_DIR_PATH}{Config.GITHUB_KARMA_DATA_CERT_FILENAME}",
             'r'
     ) as cert_file:
         app_key = cert_file.read()
@@ -31,8 +31,8 @@ def get_token() -> Github:
     return Github(
         login_or_token=git_integration.get_access_token(
             git_integration.get_installation(
-                Config.GITHUB_KARMA_OWNER, 
-                Config.GITHUB_KARMA_REPO).id
+                Config.GITHUB_KARMA_DATA_OWNER, 
+                Config.GITHUB_KARMA_DATA_REPO).id
         ).token
     )
 
