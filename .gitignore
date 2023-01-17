@@ -133,5 +133,4 @@ dmypy.json
 _test*
 .certs
 *.prod
-*.prod.yml
-*.prod.sql
+*.prod.*
