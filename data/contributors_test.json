@@ -3,18 +3,24 @@
   "data": [
     {
       "discord_id": 1056465395881615400,
+      "discord_name": "bladiebla",
+      "twitter_handle": null,
       "address": "",
       "history": null,
       "is_active": 1
     },
     {
       "discord_id": 843774090380443668,
+      "discord_name": "bladiebla",
+      "twitter_handle": null,
       "address": "",
       "history": null,
       "is_active": 0
     },
     {
       "discord_id": 776520842070720514,
+      "discord_name": "bladiebla",
+      "twitter_handle": null,
       "address": "5f8ac83a9b3bf2eff20a6c16cd05c111",
       "history": null,
       "is_active": 1
