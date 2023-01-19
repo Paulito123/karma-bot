@@ -3,7 +3,8 @@ from discord import (
     User, 
     Interaction,
     ui,
-    TextStyle
+    TextStyle,
+    Object as DObject
 )
 from discord.ext import commands
 from src.util.ol_util import is_slow_wallet_as, is_valid_address_format
@@ -37,11 +38,11 @@ class Identities(commands.Cog):
         if dbid:
             # check if already flagged as active
             if dbid[3] == 1:
-                message = f"{Emoji.print(Emoji, emoji_name='shrug')} Account [{str(account)}] is already whitelisted."
+                message = f"{Emoji.print(Emoji, emoji_name='shrug')} [{str(account)}] is already whitelisted."
             else:
                 # activate account
                 if Contributor.activate_contributor(Contributor, account.id):
-                    message = f"{Emoji.print(Emoji, emoji_name='check')} Account [{str(account)}] has been added to the whitelist."
+                    message = f"{Emoji.print(Emoji, emoji_name='check')} [{str(account)}] has been added to the whitelist."
                 else:
                     message = f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong, [{str(account)}] could not be whitelisted."
             await interaction.followup.send(
@@ -51,9 +52,9 @@ class Identities(commands.Cog):
             return
         
         # add the new account to the db
-        Contributor.add_contributor(account.id)
+        Contributor.add_contributor(account)
         await interaction.followup.send(
-            f"{Emoji.print(Emoji, emoji_name='check')} Account [{str(account)}] has been added to the whitelist.", 
+            f"{Emoji.print(Emoji, emoji_name='check')} [{str(account)}] has been added to the whitelist.", 
             ephemeral=True
         )
         return
@@ -67,7 +68,7 @@ class Identities(commands.Cog):
         if not hasattr(account, 'roles') or \
             Config.ROLE_NAME_KARMA_ADMIN not in [y.name for y in interaction.user.roles]:
             await interaction.followup.send(
-                f"{Emoji.print(Emoji, emoji_name='warning')} Sorry, your account does not have enough previleges to graylist other accounts.", 
+                f"{Emoji.print(Emoji, emoji_name='warning')} Sorry, your account does not have the previlege to graylist other accounts.", 
                 ephemeral=True
             )
             return
@@ -77,7 +78,7 @@ class Identities(commands.Cog):
         if dbid:
             # deactivate user
             if Contributor.deactivate_contributor(Contributor, account.id):
-                message = f"{Emoji.print(Emoji, emoji_name='check')} Account [{str(account)}] has been added to the graylist."
+                message = f"{Emoji.print(Emoji, emoji_name='check')} [{str(account)}] has been added to the graylist."
             else:
                 message = f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong, [{str(account)}] could not be graylisted."
             await interaction.followup.send(
@@ -87,7 +88,7 @@ class Identities(commands.Cog):
             return
         
         await interaction.followup.send(
-            f"{Emoji.print(Emoji, emoji_name='shrug')} Account [{str(account)}] is already graylisted.", 
+            f"{Emoji.print(Emoji, emoji_name='shrug')} [{str(account)}] is already graylisted.", 
             ephemeral=True
         )
         return
@@ -116,9 +117,10 @@ class IdentityForm(ui.Modal):
         """ IdentityForm contructor """
 
         super().__init__(title=f"0L Warrior Identity")
-        
+
         self.account = "" if not dbid[1] else dbid[1]
-        
+        self.twitter_handle = "" if not dbid[3] else dbid[3]
+
         # Define the textbox input
         self.account_input = ui.TextInput(
             label="0L Address (only slow wallets)", 
@@ -128,8 +130,17 @@ class IdentityForm(ui.Modal):
             default=self.account,
             max_length=32)
         
+        self.twitter_input = ui.TextInput(
+            label="Twitter handle (optional)", 
+            style=TextStyle.short,
+            placeholder="https://twitter.com/You", 
+            required=False,
+            default=self.twitter_handle,
+            max_length=35)
+        
         # Add the textbox input to the form
         self.add_item(self.account_input)
+        self.add_item(self.twitter_input)
 
     async def on_submit(self, interaction: Interaction):
         """ This function is called when the user submits the form. """
@@ -142,6 +153,9 @@ class IdentityForm(ui.Modal):
                 ephemeral=True
             )
             return
+        
+        # getting twitter input
+        twitter_handle = self.twitter_input.value.lower() if self.twitter_input.value.lower() else ""
 
         # Even though this is checked in the parent function, we want to check 
         # again because we don't know how much time is between calling the 
@@ -156,8 +170,10 @@ class IdentityForm(ui.Modal):
         
         # check the input
         account_db = "" if not dbid[1] else dbid[1]
-        if account_db == account_input:
-            message = f"{Emoji.print(Emoji, emoji_name='shrug')} Same address submitted, nothing changed."
+        twitter_db = "" if not dbid[3] else dbid[3]
+
+        if account_db == account_input and twitter_handle == twitter_db:
+            message = f"{Emoji.print(Emoji, emoji_name='shrug')} No changes detected."
             await interaction.response.send_message(message, ephemeral=True)
             return
 
@@ -172,7 +188,7 @@ class IdentityForm(ui.Modal):
             message = f"{Emoji.print(Emoji, emoji_name='cross_red')} {val_check['message']}" 
         elif val_check["status"] == "Success":
             # wallet is a confirmed slow wallet!
-            if Contributor.add_address(Contributor, interaction.user.id, account_input):
+            if Contributor.submit_form(Contributor, interaction.user.id, account_input, twitter_handle):
                 message = f"{Emoji.print(Emoji, emoji_name='check')} Your identity has been saved!"
             else:
                 # error happened when trying to update database
@@ -185,4 +201,5 @@ class IdentityForm(ui.Modal):
 
 
 async def setup(bot: commands.Bot):
-    await bot.add_cog(Identities(bot)) # , guild=DObject(696335510037332020)
+    await bot.add_cog(Identities(bot))
+    # await bot.add_cog(Identities(bot), guild=DObject(1056486383629389824))
