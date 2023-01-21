@@ -125,7 +125,7 @@ class IdentityForm(ui.Modal):
         self.account_input = ui.TextInput(
             label="0L Address (only slow wallets)", 
             style=TextStyle.short,
-            placeholder="Insert slow wallet address", 
+            placeholder="Your slow wallet address", 
             required=True,
             default=self.account,
             max_length=32)
@@ -202,4 +202,4 @@ class IdentityForm(ui.Modal):
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Identities(bot))
-    # await bot.add_cog(Identities(bot), guild=DObject(1056486383629389824))
+    # await bot.add_cog(Identities(bot), guild=DObject(int(Config.DISCORD_BOT_CHANNEL_ID)))
