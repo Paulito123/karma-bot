@@ -20,7 +20,7 @@ class Contributor(Base):
     # Link to on-chain identity
     address = Column(String(32), nullable=True)
     # Optional twitter handle
-    twitter_handle = Column(String(50), nullable=True)
+    # twitter_handle = Column(String(50), nullable=True)
     # A history of address changes is kept in json format
     history = Column(JSONB, nullable=True)
     # indicator if account is still active/enabled 1 = Yes, 0 = No
@@ -39,8 +39,9 @@ class Contributor(Base):
             .query(
                 Contributor.id, 
                 Contributor.address, 
-                Contributor.history,
-                Contributor.twitter_handle)\
+                Contributor.history
+                # , Contributor.twitter_handle
+                )\
             .where(
                 Contributor.discord_id==discord_id, 
                 Contributor.is_active==1)\
@@ -52,8 +53,9 @@ class Contributor(Base):
                 Contributor.id, 
                 Contributor.address, 
                 Contributor.history, 
-                Contributor.is_active,
-                Contributor.twitter_handle)\
+                Contributor.is_active
+                # , Contributor.twitter_handle
+                )\
             .where(
                 Contributor.discord_id==discord_id)\
             .first()
@@ -75,11 +77,11 @@ class Contributor(Base):
     def deactivate_contributor(self, discord_id: int) -> Boolean:
         return self.__change_status(discord_id, 0)
     
-    def submit_form(self, discord_id: int, new_address: AnyStr, twitter_handle: AnyStr) -> Boolean:
+    def submit_form(self, discord_id: int, new_address: AnyStr) -> Boolean:
         try:
             # create update object
             c = update(Contributor)
-            c = c.values({"twitter_handle": twitter_handle})
+            # c = c.values({"twitter_handle": twitter_handle})
 
             # checking history
             cobj = self.get_active_contributor_by_discord_id(discord_id)

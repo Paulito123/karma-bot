@@ -26,7 +26,7 @@ services:
       - POSTGRES_USER=karma
       - POSTGRES_PASSWORD=karma
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - karma_test_data:/var/lib/postgresql/data/
   
   gitsync:
     container_name: karma-gitsync
@@ -42,4 +42,4 @@ services:
       - db
 
 volumes:
-  postgres_data:
+  karma_test_data:

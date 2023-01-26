@@ -12,6 +12,7 @@ from src.model import Contributor
 from typing import Tuple
 from src.config import Config
 from src.util.emoji import Emoji
+from re import search
 
 
 class Identities(commands.Cog):
@@ -98,7 +99,7 @@ class Identities(commands.Cog):
         # check if address is known
         dbid = Contributor.get_active_contributor_by_discord_id(interaction.user.id)
         if not dbid or len(dbid) == 0:
-            message = f"{Emoji.print(Emoji, emoji_name='warning')} Only whitelisted contributors can manage their warrior identity."
+            message = f"{Emoji.print(Emoji, emoji_name='warning')} Only whitelisted contributors can manage their warrior address."
             await interaction.response.send_message(message, ephemeral=True)
             return
         
@@ -116,10 +117,10 @@ class IdentityForm(ui.Modal):
     def __init__(self, interaction: Interaction, dbid: Tuple):
         """ IdentityForm contructor """
 
-        super().__init__(title=f"0L Warrior Identity")
+        super().__init__(title=f"0L Warrior account")
 
         self.account = "" if not dbid[1] else dbid[1]
-        self.twitter_handle = "" if not dbid[3] else dbid[3]
+        # self.twitter_handle = "" if not dbid[3] else dbid[3]
 
         # Define the textbox input
         self.account_input = ui.TextInput(
@@ -130,17 +131,17 @@ class IdentityForm(ui.Modal):
             default=self.account,
             max_length=32)
         
-        self.twitter_input = ui.TextInput(
-            label="Twitter handle (optional)", 
-            style=TextStyle.short,
-            placeholder="https://twitter.com/You", 
-            required=False,
-            default=self.twitter_handle,
-            max_length=35)
+        # self.twitter_input = ui.TextInput(
+        #     label="Twitter handle (optional)", 
+        #     style=TextStyle.short,
+        #     placeholder="https://twitter.com/You", 
+        #     required=False,
+        #     default=self.twitter_handle,
+        #     max_length=35)
         
         # Add the textbox input to the form
         self.add_item(self.account_input)
-        self.add_item(self.twitter_input)
+        # self.add_item(self.twitter_input)
 
     async def on_submit(self, interaction: Interaction):
         """ This function is called when the user submits the form. """
@@ -155,7 +156,12 @@ class IdentityForm(ui.Modal):
             return
         
         # getting twitter input
-        twitter_handle = self.twitter_input.value.lower() if self.twitter_input.value.lower() else ""
+        # twitter_handle = self.twitter_input.value.lower() if self.twitter_input.value.lower() else ""
+        # if len(twitter_handle) > 0 and not search('^(https://twitter.com/[A-Za-z0-9_]{4,15})$', twitter_handle):
+        #     message = "Twitter handle is not valid."
+        #     ...
+        
+
 
         # Even though this is checked in the parent function, we want to check 
         # again because we don't know how much time is between calling the 
@@ -163,16 +169,17 @@ class IdentityForm(ui.Modal):
         dbid = Contributor.get_active_contributor_by_discord_id(interaction.user.id)
         if not dbid or len(dbid) == 0:
             await interaction.response.send_message(
-                f"{Emoji.print(Emoji, emoji_name='cross_red')} Only whitelisted contributors can manage their warrior identity.", 
+                f"{Emoji.print(Emoji, emoji_name='cross_red')} Only whitelisted contributors can manage their warrior address.", 
                 ephemeral=True
             )
             return
         
         # check the input
         account_db = "" if not dbid[1] else dbid[1]
-        twitter_db = "" if not dbid[3] else dbid[3]
+        # twitter_db = "" if not dbid[3] else dbid[3]
 
-        if account_db == account_input and twitter_handle == twitter_db:
+        if account_db == account_input:
+        # if account_db == account_input and twitter_handle == twitter_db:
             message = f"{Emoji.print(Emoji, emoji_name='shrug')} No changes detected."
             await interaction.response.send_message(message, ephemeral=True)
             return
@@ -188,8 +195,8 @@ class IdentityForm(ui.Modal):
             message = f"{Emoji.print(Emoji, emoji_name='cross_red')} {val_check['message']}" 
         elif val_check["status"] == "Success":
             # wallet is a confirmed slow wallet!
-            if Contributor.submit_form(Contributor, interaction.user.id, account_input, twitter_handle):
-                message = f"{Emoji.print(Emoji, emoji_name='check')} Your identity has been saved!"
+            if Contributor.submit_form(Contributor, interaction.user.id, account_input):
+                message = f"{Emoji.print(Emoji, emoji_name='check')} Your address has been saved!"
             else:
                 # error happened when trying to update database
                 message = f"{Emoji.print(Emoji, emoji_name='cross_red')} Something went wrong. Please try again or contact one of the administrators"
