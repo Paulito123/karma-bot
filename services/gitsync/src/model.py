@@ -20,7 +20,7 @@ class Contributor(Base):
     # Link to on-chain identity
     address = Column(String(32), nullable=True)
     # Optional twitter handle
-    twitter_handle = Column(String(50), nullable=True)
+    # twitter_handle = Column(String(50), nullable=True)
     # A history of address changes is kept in json format
     history = Column(JSONB, nullable=True)
     # indicator if account is still active/enabled 1 = Yes, 0 = No
@@ -47,7 +47,7 @@ class Contributor(Base):
                     Contributor.discord_id,
                     Contributor.discord_name,
                     Contributor.address,
-                    Contributor.twitter_handle,
+                    # Contributor.twitter_handle,
                     Contributor.history,
                     Contributor.is_active)\
                 .all()
@@ -56,9 +56,9 @@ class Contributor(Base):
                     "discord_id": contrib[0],
                     "discord_name": contrib[1],
                     "address": contrib[2],
-                    "twitter_handle": contrib[3],
-                    "history": contrib[4],
-                    "is_active": contrib[5]
+                    # "twitter_handle": contrib[3],
+                    "history": contrib[3],
+                    "is_active": contrib[4]
                 }
                 dict_out['data'].append(obj_out)
             return dict_out
@@ -74,7 +74,7 @@ class Contributor(Base):
                     discord_id = contrib['discord_id'],
                     discord_name = contrib['discord_name'],
                     address = contrib['address'],
-                    twitter_handle = contrib['twitter_handle'],
+                    # twitter_handle = contrib['twitter_handle'],
                     history = contrib['history'],
                     is_active = contrib['is_active']
                 )
