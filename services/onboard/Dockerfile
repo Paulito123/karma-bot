@@ -4,6 +4,19 @@ FROM python:3.9.14-slim-buster
 # set work directory
 WORKDIR /usr/src/app
 
+# create .0L dir
+RUN mkdir -p /root/.0L
+COPY assets/0L.toml /root/.0L/
+
+# copy binaries
+COPY ./bin ${BIN_PATH}
+
+# make executable
+RUN chmod +x ${BIN_PATH}/ol ${BIN_PATH}/txs ${BIN_PATH}/onboard
+
+# add ol path to PATH
+ENV PATH "$PATH:/usr/src/app/bin"
+
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
