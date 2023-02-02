@@ -40,6 +40,16 @@ services:
       - ./services/gitsync/.env.dev
     depends_on:
       - db
+  
+  onboard:
+    container_name: karma-onboard
+    build:
+      context: ./services/onboard
+      dockerfile: Dockerfile
+    env_file:
+      - ./services/onboard/.env.dev
+    depends_on:
+      - db
 
 volumes:
   karma_test_data:

@@ -1,22 +1,34 @@
 from datetime import datetime
 from config import Config
-# from model import Contributor
+from model import OnboardLog
 from os import popen
 from typing import AnyStr
 from re import search
+from toolz import onboard_account, onboard_account_async
+import asyncio
+from time import sleep
 
 
-def onboard_account(account_auth: AnyStr) -> AnyStr:
-    try:
-        if not search('^([A-Fa-f0-9]{64})$', account_auth):
-            raise Exception('Not a valid authentication address.')
+async def handle_onboard_requests(account_auth: AnyStr):
+    res = await onboard_account_async(account_auth)
+    if res["status"] == "success":
+        print("success!")
+        OnboardLog.close_onboard_request(account_auth)
+    else:
+        ...
 
-        command_string = f"{Config.ONBOARD_FILEPATH} {account_auth} \"{Config.MNEM}\""
-        stdout = popen(command_string,'w')
-        chain_message = stdout
-        stdout.close()
-        return f'{{"status": "success", "message": "{chain_message}"}}'
 
-    except Exception as e:
-        print(f"[{datetime.now()}]:ERROR:{e}")
-        return f'{{"status": "failed", "message": "{e}"}}'
+def run_onboard_tasks(loop: asyncio.AbstractEventLoop):
+    onboard_candidates = OnboardLog.get_onboard_candidates()
+    if len(onboard_candidates) > 0:
+        tasks = [handle_onboard_requests(f"{single_candidate.address}") for single_candidate in onboard_candidates]
+        loop.run_until_complete(asyncio.wait(tasks))
+
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    while True:
+        print("runnin")
+        run_onboard_tasks(loop)
+        print("sleepin")
+        sleep(60)

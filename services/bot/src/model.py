@@ -1,7 +1,7 @@
-from sqlalchemy import Column, DateTime, Integer, String, func, Boolean, BigInteger, update
+from sqlalchemy import Column, DateTime, Integer, String, func, Boolean, BigInteger, update, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import JSONB
-from typing import AnyStr, Tuple
+from typing import AnyStr, Tuple, Dict
 from datetime import datetime
 from src.connect import engine, session
 from .config import Config
@@ -125,6 +125,44 @@ class Contributor(Base):
             )
             session.add(contrib)
             session.commit()
+
+
+class OnboardLog(Base):
+    __tablename__ = "onboardlog"
+
+    id = Column(Integer, primary_key=True)
+    # Link to Discord account
+    discord_id = Column(BigInteger, nullable=False)
+    discord_name = Column(String(40), nullable=False)
+    address = Column(String(64), nullable=False, unique=True)
+    # indicator if account is open for onboarding 1 = Yes, 0 = No
+    is_request_open = Column(Integer, nullable=False, default=1)
+    message = Column(Text, nullable=True)
+    # technical timestamp fields
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    def queue_onboard_request(discord_id: int, discord_name: AnyStr, address: AnyStr) -> Dict:
+        try:
+            req = session\
+                .query(OnboardLog)\
+                .where(OnboardLog.address == address)\
+                .first()
+            
+            if req:
+                return {"status": "failed", "message": "Onboard request already in queue"}
+            
+            o = OnboardLog(
+                discord_id = discord_id,
+                discord_name = discord_name,
+                address = address
+            ) 
+            
+            session.add(o)
+            return {"status": "success", "message": "Onboard request queued"}
+        except Exception as e:
+            print(f"[{datetime.now()}]:ERROR:{e}")
+            return {"status": "failed", "message": "Error occurred, onboard request could not be queued"}
 
 
 # Base.metadata.create_all(engine)
