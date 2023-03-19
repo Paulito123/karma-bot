@@ -86,13 +86,15 @@ async def is_slow_wallet_as(address: AnyStr) -> Dict:
         return {"status": "Error", "message": "No response from chain"}
 
 
-def is_valid_address_format(address: AnyStr):
-    if search("[a-fA-F0-9]{32}$", address):
+def is_valid_address_format(address: AnyStr, length: int=32):
+    """ Check if a hex addres is valid or not. """
+    if search(f"[a-fA-F0-9]{{{length}}}$", address) and len(address) == length:
         return True
     else:
         return False
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
+    print(is_valid_address_format("5F8AC83A9B3BF2EFF20A6C16CD05C111", 30))
 #     test_list = [
 #         "5F8AC83A9B3BF2EFF20A6C16CD05C111", # basic wallet >> SLOW
 #         "2BFD96D8A674A360B733D16C65728D72", # validator wallet >> SLOW

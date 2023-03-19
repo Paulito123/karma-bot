@@ -134,3 +134,4 @@ _test*
 .certs
 *.prod
 *.prod.*
+testaccs.txt

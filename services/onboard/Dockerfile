@@ -44,5 +44,4 @@ ENTRYPOINT ["/usr/src/entrypoint.sh"]
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # run main.py
-# CMD ["python", "main.py"]
-CMD ["python", "src/chores.py"]
+CMD ["python", "src/main.py"]

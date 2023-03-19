@@ -11,9 +11,10 @@ services:
       - './services/bot/src:/usr/src/app/src'
     restart: on-failure
     env_file:
-      - ./services/bot/.env.dev
+      - './services/bot/.env.dev'
     depends_on:
       - db
+    network_mode: host
   
   db:
     container_name: karma-db
@@ -21,12 +22,13 @@ services:
       context: ./services/db
       dockerfile: Dockerfile
     expose:
-      - 5432
+      - 5432:5432
     environment:
       - POSTGRES_USER=karma
       - POSTGRES_PASSWORD=karma
     volumes:
       - karma_test_data:/var/lib/postgresql/data/
+    network_mode: host
   
   gitsync:
     container_name: karma-gitsync
@@ -40,6 +42,7 @@ services:
       - ./services/gitsync/.env.dev
     depends_on:
       - db
+    network_mode: host
   
   onboard:
     container_name: karma-onboard
@@ -50,6 +53,8 @@ services:
       - ./services/onboard/.env.dev
     depends_on:
       - db
+    network_mode: host
 
 volumes:
   karma_test_data:
+

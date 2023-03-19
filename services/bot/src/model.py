@@ -1,4 +1,15 @@
-from sqlalchemy import Column, DateTime, Integer, String, func, Boolean, BigInteger, update, Text
+from sqlalchemy import (
+    Column, 
+    DateTime, 
+    Integer, 
+    String, 
+    func, 
+    Boolean, 
+    BigInteger, 
+    update, 
+    Text, 
+    label
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import JSONB
 from typing import AnyStr, Tuple, Dict
@@ -19,8 +30,6 @@ class Contributor(Base):
     discord_name = Column(String(40), nullable=False)
     # Link to on-chain identity
     address = Column(String(32), nullable=True)
-    # Optional twitter handle
-    # twitter_handle = Column(String(50), nullable=True)
     # A history of address changes is kept in json format
     history = Column(JSONB, nullable=True)
     # indicator if account is still active/enabled 1 = Yes, 0 = No
@@ -150,7 +159,7 @@ class OnboardLog(Base):
                 .first()
             
             if req:
-                return {"status": "failed", "message": "Onboard request already in queue"}
+                return {"status": "Error", "message": "Onboard request already in queue"}
             
             o = OnboardLog(
                 discord_id = discord_id,
@@ -159,10 +168,20 @@ class OnboardLog(Base):
             ) 
             
             session.add(o)
-            return {"status": "success", "message": "Onboard request queued"}
+            return {"status": "Success", "message": "Onboard request queued"}
         except Exception as e:
             print(f"[{datetime.now()}]:ERROR:{e}")
-            return {"status": "failed", "message": "Error occurred, onboard request could not be queued"}
+            return {"status": "Error", "message": "Error occurred, onboard request could not be queued"}
+    
+    def get_req_cnt_24h(is_request_open: int=0) -> int:
+        """ Get the number of closed requests in the last 24 hours. """
+        # TODO: check online what is the code to calculate with dates...
+        return session\
+            .query(label("count", func.count(OnboardLog.id)))\
+            .where(
+                OnboardLog.updated_at > (func.now() - (60*60*24)),
+                OnboardLog.is_request_open == is_request_open)\
+            .scalar()
 
 
 # Base.metadata.create_all(engine)
